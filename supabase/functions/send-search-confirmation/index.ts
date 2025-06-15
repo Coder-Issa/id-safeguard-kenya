@@ -18,6 +18,9 @@ interface SearchConfirmationRequest {
   place_found?: string;
   notifiedEmail: string;
   timestamp: string;
+  searcher_email?: string | null;
+  searcher_phone?: string | null;
+  searcher_name?: string | null;
 }
 
 serve(async (req: Request) => {
@@ -41,6 +44,17 @@ serve(async (req: Request) => {
         <li><strong>Amount Paid:</strong> Ksh ${body.amount}</li>
         <li><strong>Confirmation Time:</strong> ${new Date(body.timestamp).toLocaleString()}</li>
       </ul>
+      ${
+        (body.searcher_email || body.searcher_phone || body.searcher_name)
+          ? `<h3>Searcher/Requester Info</h3>
+            <ul>
+            ${body.searcher_name ? `<li><strong>Name:</strong> ${body.searcher_name}</li>` : ""}
+            ${body.searcher_email ? `<li><strong>Email:</strong> ${body.searcher_email}</li>` : ""}
+            ${body.searcher_phone ? `<li><strong>Phone:</strong> ${body.searcher_phone}</li>` : ""}
+            </ul>
+          `
+          : ""
+      }
       <hr>
       <p>Please verify the payment in your M-PESA account and reach out to the ID owner for further recovery steps.</p>
     `;

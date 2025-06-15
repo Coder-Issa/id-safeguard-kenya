@@ -1,12 +1,11 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from "@/hooks/use-toast";
 import IDSearchForm from "./IDSearchForm";
 import IDResultPanel from "./IDResultPanel";
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from "@/hooks/use-toast";
+import { useAuth } from '@/hooks/useAuth';
 
 type SearchResult = {
   id_number: string;
@@ -28,7 +27,8 @@ const SearchCard = () => {
   const [result, setResult] = React.useState<SearchResult | null>(null);
   const [notFound, setNotFound] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [sending, setSending] = React.useState(false); // for payment confirmation button
+  const [sending, setSending] = React.useState(false);
+  const { profile } = useAuth();
 
   // Search handler, used in IDSearchForm
   const handleSearch = async (term: string) => {
@@ -76,6 +76,9 @@ const SearchCard = () => {
             place_found: result.place_found,
             notifiedEmail: CONFIRMATION_EMAIL,
             timestamp: new Date().toISOString(),
+            searcher_email: profile?.email || null,
+            searcher_phone: profile?.phone || null,
+            searcher_name: profile?.full_name || null,
           }),
         }
       );
@@ -83,9 +86,9 @@ const SearchCard = () => {
       if (emailRes.ok) {
         toast({
           title: "Confirmation Sent",
-          description:
-            "Thank you! Your payment confirmation has been sent.",
+          description: "Thank you! Your payment confirmation has been sent.",
         });
+        setTimeout(() => window.location.reload(), 1500);
       } else {
         toast({
           title: "Error",
@@ -143,3 +146,4 @@ const SearchCard = () => {
 };
 
 export default SearchCard;
+
