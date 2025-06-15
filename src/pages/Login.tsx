@@ -8,23 +8,45 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from "@/components/ui/use-toast";
+import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  React.useEffect(() => {
+    if (user && !loading) {
+      // Redirect authenticated users to home
+      navigate("/");
+    }
+    // eslint-disable-next-line
+  }, [user, loading]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password, isAdmin });
-    // This will be connected to actual authentication later
+    setSubmitting(true);
+    setErrorMsg("");
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setErrorMsg(error.message);
+      toast({ title: "Login failed", description: error.message });
+    } else {
+      toast({ title: "Login successful!" });
+      // navigation will happen via useEffect on successful login
+    }
+    setSubmitting(false);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 bg-gradient-to-br from-kenya-green/5 to-kenya-red/5 py-12">
         <div className="container mx-auto px-4">
           <Card className="max-w-md mx-auto shadow-xl border-2 border-kenya-green/20">
@@ -34,7 +56,7 @@ const Login = () => {
               </CardTitle>
               <p className="text-gray-600">Sign in to your account</p>
             </CardHeader>
-            
+
             <CardContent className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -60,30 +82,22 @@ const Login = () => {
                     required
                   />
                 </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="admin"
-                    checked={isAdmin}
-                    onCheckedChange={(checked) => setIsAdmin(checked as boolean)}
-                  />
-                  <Label htmlFor="admin" className="text-sm">
-                    Login as Admin
-                  </Label>
-                </div>
-
-                <Button 
-                  type="submit" 
+                {errorMsg && (
+                  <div className="text-red-600 text-sm">{errorMsg}</div>
+                )}
+                <Button
+                  type="submit"
                   className="w-full bg-kenya-green hover:bg-kenya-green/90 text-white"
+                  disabled={submitting}
                 >
-                  Sign In
+                  {submitting ? "Signing In..." : "Sign In"}
                 </Button>
               </form>
 
               <div className="mt-6 text-center">
                 <p className="text-gray-600">
                   Don't have an account?{' '}
-                  <button 
+                  <button
                     onClick={() => navigate('/register')}
                     className="text-kenya-red hover:underline font-semibold"
                   >
