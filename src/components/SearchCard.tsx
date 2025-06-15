@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import IDSearchForm from "./IDSearchForm";
@@ -27,7 +28,7 @@ const SearchCard = () => {
   const [notFound, setNotFound] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [sending, setSending] = React.useState(false);
-  const { profile } = useAuth();
+  const { profile, user, session } = useAuth();
 
   // Search handler, used in IDSearchForm
   const handleSearch = async (term: string) => {
@@ -61,31 +62,49 @@ const SearchCard = () => {
   const handleConfirmPayment = async () => {
     if (!result) return;
     setSending(true);
+    
     try {
-      console.log("Attempting to send confirmation email...");
+      console.log("=== PAYMENT CONFIRMATION DEBUG INFO ===");
+      console.log("User authenticated:", !!user);
+      console.log("Session exists:", !!session);
+      console.log("Profile data:", profile);
+      console.log("Result data:", result);
+      console.log("Attempting to invoke edge function...");
+      
+      const requestBody = {
+        id_number: result.id_number,
+        full_name: result.full_name,
+        phone: SEARCH_PAYMENT_NUMBER,
+        amount: SEARCH_PAYMENT_AMOUNT,
+        place_found: result.place_found,
+        notifiedEmail: CONFIRMATION_EMAIL,
+        timestamp: new Date().toISOString(),
+        searcher_email: profile?.email || null,
+        searcher_phone: profile?.phone || null,
+        searcher_name: profile?.full_name || null,
+      };
+      
+      console.log("Request body:", requestBody);
       
       const { data, error } = await supabase.functions.invoke('send-search-confirmation', {
-        body: {
-          id_number: result.id_number,
-          full_name: result.full_name,
-          phone: SEARCH_PAYMENT_NUMBER,
-          amount: SEARCH_PAYMENT_AMOUNT,
-          place_found: result.place_found,
-          notifiedEmail: CONFIRMATION_EMAIL,
-          timestamp: new Date().toISOString(),
-          searcher_email: profile?.email || null,
-          searcher_phone: profile?.phone || null,
-          searcher_name: profile?.full_name || null,
-        },
+        body: requestBody,
       });
 
-      console.log("Edge function response:", { data, error });
+      console.log("Edge function response - data:", data);
+      console.log("Edge function response - error:", error);
+      console.log("=== END DEBUG INFO ===");
 
       if (error) {
-        console.error("Edge function error:", error);
+        console.error("Edge function error details:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        
         toast({
           title: "Error",
-          description: error.message || "Failed to send confirmation email.",
+          description: `Failed to send confirmation: ${error.message}. Please try again or contact support.`,
           variant: "destructive",
         });
       } else {
@@ -97,7 +116,13 @@ const SearchCard = () => {
         setTimeout(() => window.location.reload(), 1500);
       }
     } catch (err) {
-      console.error("Unexpected error:", err);
+      console.error("Unexpected error in handleConfirmPayment:", err);
+      console.error("Error details:", {
+        name: err instanceof Error ? err.name : 'Unknown',
+        message: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : 'No stack trace'
+      });
+      
       toast({
         title: "Error",
         description: "Failed to send confirmation. Please try again.",
