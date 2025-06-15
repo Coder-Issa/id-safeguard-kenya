@@ -47,7 +47,7 @@ export function useAuth(): AuthContextState {
 
   useEffect(() => {
     // Listen to auth changes first
-    const { data: subscription } = supabase.auth.onAuthStateChange(
+    const { subscription } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
