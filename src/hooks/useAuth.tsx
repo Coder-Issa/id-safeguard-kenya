@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -47,7 +46,7 @@ export function useAuth(): AuthContextState {
 
   useEffect(() => {
     // Listen to auth changes first
-    const { subscription } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
@@ -71,7 +70,11 @@ export function useAuth(): AuthContextState {
       }
       setLoading(false);
     });
-    return () => subscription.unsubscribe();
+
+    // Cleanup: safely call unsubscribe if subscription exists
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
     // eslint-disable-next-line
   }, []);
 
