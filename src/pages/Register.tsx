@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,13 +10,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from "@/components/ui/use-toast";
 import { useAuth } from '@/hooks/useAuth';
 
+const ADMIN_REGISTRATION_CODE = "K3NYA-ADM1N-2406";
+
 const Register = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    adminCode: ''
   });
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -26,7 +28,6 @@ const Register = () => {
 
   React.useEffect(() => {
     if (user && !loading) {
-      // Redirect authenticated users to home
       navigate("/");
     }
     // eslint-disable-next-line
@@ -49,6 +50,9 @@ const Register = () => {
       return;
     }
 
+    // Determine role based on admin code
+    const isAdmin = formData.adminCode.trim() === ADMIN_REGISTRATION_CODE;
+
     // Sign up with email and password
     const { data, error } = await supabase.auth.signUp({
       email: formData.email,
@@ -57,6 +61,7 @@ const Register = () => {
         emailRedirectTo: window.location.origin + "/"
       }
     });
+
     if (error) {
       setErrorMsg(error.message);
       toast({ title: "Sign up failed!", description: error.message });
@@ -64,6 +69,7 @@ const Register = () => {
       return;
     }
     const userId = data.user?.id;
+
     // Populate user profile
     if (userId) {
       await supabase.from("profiles").insert([{
@@ -72,15 +78,17 @@ const Register = () => {
         email: formData.email,
         phone: formData.phone
       }]);
-      // Assign "user" role by default
+      // Assign role based on admin code
       await supabase.from("user_roles").insert([{
         user_id: userId,
-        role: "user"
+        role: isAdmin ? "admin" : "user"
       }]);
     }
     toast({
       title: "Registration successful!",
-      description: "Please check your email for a confirmation link and then log in."
+      description: isAdmin
+        ? "You have registered as an Admin. Please check your email for a confirmation link and then log in."
+        : "Please check your email for a confirmation link and then log in."
     });
     navigate("/login");
     setSubmitting(false);
@@ -139,6 +147,23 @@ const Register = () => {
                     onChange={handleInputChange}
                     className="border-2 border-gray-200 focus:border-kenya-red"
                     required
+                  />
+                </div>
+
+                {/* Admin registration code field */}
+                <div>
+                  <Label htmlFor="adminCode">
+                    Admin Code <span className="text-xs text-gray-400">(leave blank unless authorized)</span>
+                  </Label>
+                  <Input
+                    id="adminCode"
+                    name="adminCode"
+                    type="text"
+                    value={formData.adminCode}
+                    onChange={handleInputChange}
+                    placeholder="Enter admin code (if any)"
+                    className="border-2 border-gray-200 focus:border-kenya-green"
+                    autoComplete="off"
                   />
                 </div>
 
