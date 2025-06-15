@@ -42,23 +42,29 @@ export function useAuth(): AuthContextState {
 
   // Check if user is admin
   const fetchRole = async (userId: string) => {
+    // Add extra logging for debugging
     const { data, error } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
       .maybeSingle();
 
+    // Begin logging
+    console.info("[useAuth] fetchRole - start", { userId });
     if (error) {
       console.error("[useAuth] fetchRole error:", error.message);
       setIsAdmin(false);
+      console.log("[useAuth] Setting isAdmin = false due to fetch error");
+    } else if (!data) {
+      setIsAdmin(false);
+      console.log("[useAuth] fetchRole - No data returned, setting isAdmin = false");
     } else {
-      const adminStatus = data?.role === "admin";
+      const adminStatus = data.role === "admin";
       setIsAdmin(adminStatus);
       console.log(
         "[useAuth] Fetched user role:",
         data,
-        "Setting isAdmin to",
-        adminStatus
+        `Setting isAdmin to ${adminStatus} for user_id=${userId}`
       );
     }
   };
@@ -70,8 +76,10 @@ export function useAuth(): AuthContextState {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          fetchProfile(session.user.id);
-          fetchRole(session.user.id);
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+            fetchRole(session.user.id);
+          }, 0);
         } else {
           setProfile(null);
           setIsAdmin(false);
@@ -87,14 +95,12 @@ export function useAuth(): AuthContextState {
         fetchProfile(session.user.id);
         fetchRole(session.user.id);
       }
-      setLoading(false);
+      setLoading(false);  // ALWAY set loading=false at the end of this initial fetch
     });
 
-    // Cleanup: safely call unsubscribe if subscription exists
     return () => {
       if (subscription) subscription.unsubscribe();
     };
-    // eslint-disable-next-line
   }, []);
 
   const signOut = async () => {

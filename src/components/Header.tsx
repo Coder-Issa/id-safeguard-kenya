@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,7 +13,14 @@ const Header = () => {
 
   // Handler for Admin button
   const handleAdminClick = () => {
-    if (loading) return; // prevent action if not loaded yet
+    if (loading) {
+      // Still loading; prevent click
+      toast({
+        title: "Please wait",
+        description: "Checking admin permissions...",
+      });
+      return;
+    }
     if (isAdmin) {
       navigate('/admin');
     } else {
@@ -47,17 +55,23 @@ const Header = () => {
             <Button variant="ghost" onClick={() => navigate('/post-id')}>
               Post Lost ID
             </Button>
-            {/* Admin nav is visible to all, with access controlled by role */}
+
             <Button
               variant="ghost"
               onClick={handleAdminClick}
-              className={`font-semibold ${
-                isAdmin ? "text-kenya-green" : "text-gray-400 cursor-not-allowed"
-              }`}
+              className={`font-semibold ${isAdmin ? "text-kenya-green" : "text-gray-400"} flex items-center`}
               disabled={loading}
-              aria-disabled={!isAdmin}
+              aria-disabled={!isAdmin || loading}
+              tabIndex={0}
             >
-              Admin
+              {loading ? (
+                <>
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  Checking...
+                </>
+              ) : (
+                "Admin"
+              )}
             </Button>
             {user && (
               <span className="px-2 text-gray-500 text-sm">
@@ -100,4 +114,3 @@ const Header = () => {
 };
 
 export default Header;
-
