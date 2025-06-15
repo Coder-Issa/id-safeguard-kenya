@@ -1,0 +1,24 @@
+
+{
+  "name": "Kenya Id Recovery",
+  "theme_color": "#b72727",
+  "background_color": "rgb(83, 141, 2)",
+  "short_name": "Id Recovery",
+  "description": "Recover lost identification cards by searching for posted lost Id cards.Get rewarded for every Id recovered.",
+  "categories": [
+    "business",
+    "government",
+    "personalization",
+    "security",
+    "social"
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
