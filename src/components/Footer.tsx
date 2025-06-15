@@ -42,7 +42,7 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-4">Contact</h4>
             <div className="space-y-2 text-gray-300">
               <p>Admin: 0759515450</p>
-              <p>Email: admin@idsafeguard.co.ke</p>
+              <p>Email: recoverykenyaid@gmail.com</p>
               <p>Nairobi, Kenya</p>
             </div>
           </div>

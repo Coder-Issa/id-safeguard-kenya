@@ -84,6 +84,8 @@ export function useAuth(): AuthContextState {
     setSession(null);
     setProfile(null);
     setIsAdmin(false);
+    // Refresh and redirect to homepage after logout
+    window.location.href = "/";
   };
 
   return { user, session, profile, loading, signOut, isAdmin };
