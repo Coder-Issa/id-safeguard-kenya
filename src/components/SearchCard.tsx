@@ -63,7 +63,7 @@ const SearchCard = () => {
     setSending(true);
     try {
       const emailRes = await fetch(
-        `${window.location.origin.replace(/^http/, "https")}/functions/v1/send-search-confirmation`,
+        'https://ejmlrcvhvdyyslgcwlab.supabase.co/functions/v1/send-search-confirmation',
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
