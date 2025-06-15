@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import IDSearchForm from "./IDSearchForm";
@@ -63,43 +62,45 @@ const SearchCard = () => {
     if (!result) return;
     setSending(true);
     try {
-      const emailRes = await fetch(
-        'https://ejmlrcvhvdyyslgcwlab.supabase.co/functions/v1/send-search-confirmation',
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id_number: result.id_number,
-            full_name: result.full_name,
-            phone: SEARCH_PAYMENT_NUMBER,
-            amount: SEARCH_PAYMENT_AMOUNT,
-            place_found: result.place_found,
-            notifiedEmail: CONFIRMATION_EMAIL,
-            timestamp: new Date().toISOString(),
-            searcher_email: profile?.email || null,
-            searcher_phone: profile?.phone || null,
-            searcher_name: profile?.full_name || null,
-          }),
-        }
-      );
-      const data = await emailRes.json();
-      if (emailRes.ok) {
+      console.log("Attempting to send confirmation email...");
+      
+      const { data, error } = await supabase.functions.invoke('send-search-confirmation', {
+        body: {
+          id_number: result.id_number,
+          full_name: result.full_name,
+          phone: SEARCH_PAYMENT_NUMBER,
+          amount: SEARCH_PAYMENT_AMOUNT,
+          place_found: result.place_found,
+          notifiedEmail: CONFIRMATION_EMAIL,
+          timestamp: new Date().toISOString(),
+          searcher_email: profile?.email || null,
+          searcher_phone: profile?.phone || null,
+          searcher_name: profile?.full_name || null,
+        },
+      });
+
+      console.log("Edge function response:", { data, error });
+
+      if (error) {
+        console.error("Edge function error:", error);
+        toast({
+          title: "Error",
+          description: error.message || "Failed to send confirmation email.",
+          variant: "destructive",
+        });
+      } else {
+        console.log("Confirmation email sent successfully");
         toast({
           title: "Confirmation Sent",
           description: "Thank you! Your payment confirmation has been sent.",
         });
         setTimeout(() => window.location.reload(), 1500);
-      } else {
-        toast({
-          title: "Error",
-          description: data.error || "Failed to send email.",
-          variant: "destructive",
-        });
       }
     } catch (err) {
+      console.error("Unexpected error:", err);
       toast({
         title: "Error",
-        description: "Failed to send confirmation. Try again.",
+        description: "Failed to send confirmation. Please try again.",
         variant: "destructive",
       });
     }
@@ -146,4 +147,3 @@ const SearchCard = () => {
 };
 
 export default SearchCard;
-
