@@ -1,11 +1,28 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from "@/hooks/use-toast";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, profile, isAdmin, signOut, loading } = useAuth();
+
+  // Handler for Admin button
+  const handleAdminClick = () => {
+    if (loading) return; // prevent action if not loaded yet
+    if (isAdmin) {
+      navigate('/admin');
+    } else {
+      toast({
+        title: "Access denied",
+        description: "You do not have permission to access the admin page.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <header className="bg-white shadow-md border-b-2 border-kenya-red">
@@ -30,17 +47,23 @@ const Header = () => {
             <Button variant="ghost" onClick={() => navigate('/post-id')}>
               Post Lost ID
             </Button>
-            {isAdmin && (
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/admin')}
-                className="text-kenya-green font-semibold"
-              >
-                Admin
-              </Button>
-            )}
+            {/* Admin nav is visible to all, with access controlled by role */}
+            <Button
+              variant="ghost"
+              onClick={handleAdminClick}
+              className={`font-semibold ${
+                isAdmin ? "text-kenya-green" : "text-gray-400 cursor-not-allowed"
+              }`}
+              disabled={loading}
+              aria-disabled={!isAdmin}
+            >
+              Admin
+            </Button>
             {user && (
-              <span className="px-2 text-gray-500 text-sm">Hello, {profile ? profile.full_name.split(" ")[0] : "User"}{isAdmin && " (Admin)"}</span>
+              <span className="px-2 text-gray-500 text-sm">
+                Hello, {profile ? profile.full_name.split(" ")[0] : "User"}
+                {isAdmin && " (Admin)"}
+              </span>
             )}
             {!user && !loading && (
               <>
@@ -77,3 +100,4 @@ const Header = () => {
 };
 
 export default Header;
+
