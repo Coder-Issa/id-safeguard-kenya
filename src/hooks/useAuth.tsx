@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -32,6 +33,11 @@ export function useAuth(): AuthContextState {
       .eq("id", userId)
       .maybeSingle();
     setProfile(data ?? null);
+    if (error) {
+      console.error("[useAuth] fetchProfile error:", error.message);
+    } else {
+      console.log("[useAuth] Fetched profile:", data);
+    }
   };
 
   // Check if user is admin
@@ -41,7 +47,20 @@ export function useAuth(): AuthContextState {
       .select("role")
       .eq("user_id", userId)
       .maybeSingle();
-    setIsAdmin(data?.role === "admin");
+
+    if (error) {
+      console.error("[useAuth] fetchRole error:", error.message);
+      setIsAdmin(false);
+    } else {
+      const adminStatus = data?.role === "admin";
+      setIsAdmin(adminStatus);
+      console.log(
+        "[useAuth] Fetched user role:",
+        data,
+        "Setting isAdmin to",
+        adminStatus
+      );
+    }
   };
 
   useEffect(() => {
