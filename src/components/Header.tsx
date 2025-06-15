@@ -37,9 +37,11 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-kenya-red to-kenya-green rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">ID</span>
-            </div>
+            <img 
+              src="/lovable-uploads/fea20d0e-5511-4e9c-a1a4-c929f81c8104.png" 
+              alt="ID Safeguard Kenya Logo" 
+              className="w-10 h-10 rounded-full"
+            />
             <div>
               <h1 className="text-2xl font-bold text-kenya-black">ID Safeguard Kenya</h1>
               <p className="text-sm text-gray-600">Recover Your Lost ID Cards</p>
