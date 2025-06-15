@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from "@/hooks/use-toast";
 
 type SearchResult = {
   id_number: string;
@@ -16,12 +16,18 @@ type SearchResult = {
   posted_at: string | null;
 };
 
+const SEARCH_PAYMENT_NUMBER = "0759515450";
+const SEARCH_PAYMENT_AMOUNT = 500;
+const CONFIRMATION_EMAIL = "recoverykenyaid@gmail.com";
+
 const SearchCard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searching, setSearching] = useState(false);
   const [result, setResult] = useState<SearchResult | null>(null);
   const [notFound, setNotFound] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+
+  const [sending, setSending] = useState(false); // for payment confirmation button
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +55,51 @@ const SearchCard = () => {
       setError("Unexpected error occurred.");
     }
     setSearching(false);
+  };
+
+  // New: handle confirmation payment
+  const handleConfirmPayment = async () => {
+    if (!result) return;
+    setSending(true);
+    try {
+      const emailRes = await fetch(
+        `${window.location.origin.replace(/^http/, "https")}/functions/v1/send-search-confirmation`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id_number: result.id_number,
+            full_name: result.full_name,
+            phone: SEARCH_PAYMENT_NUMBER,
+            amount: SEARCH_PAYMENT_AMOUNT,
+            place_found: result.place_found,
+            notifiedEmail: CONFIRMATION_EMAIL,
+            timestamp: new Date().toISOString(),
+          }),
+        }
+      );
+      const data = await emailRes.json();
+      if (emailRes.ok) {
+        toast({
+          title: "Confirmation Sent",
+          description:
+            "Thank you! Your payment confirmation has been sent.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: data.error || "Failed to send email.",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to send confirmation. Try again.",
+        variant: "destructive",
+      });
+    }
+    setSending(false);
   };
 
   return (
@@ -140,7 +191,49 @@ const SearchCard = () => {
               </div>
             </div>
             <div className="mt-4 text-center">
-              <p className="text-green-700 font-bold">Your ID was found! Please follow instructions to recover it from the finder.</p>
+              <p className="text-green-700 font-bold mb-4">
+                Your ID was found! Please follow instructions to recover it from the finder.
+              </p>
+              {/* Payment Section */}
+              <div className="mb-2 text-base">
+                <span className="font-semibold text-kenya-red">
+                  Step 1:
+                </span>{" "}
+                Send <span className="font-bold">Ksh {SEARCH_PAYMENT_AMOUNT}</span> via{' '}
+                <span className="font-semibold text-green-600">M-PESA</span> to{' '}
+                <span className="font-mono bg-gray-100 py-1 px-2 text-lg rounded text-kenya-black">{SEARCH_PAYMENT_NUMBER}</span>
+                .
+              </div>
+              <div className="mb-4 text-base">
+                Use M-Pesa "Send Money" to the number above. Once you’ve paid, click below:
+              </div>
+              <Button
+                className="w-full max-w-xs mx-auto h-12 bg-kenya-green hover:bg-kenya-green/90 text-white text-lg font-semibold"
+                onClick={handleConfirmPayment}
+                disabled={sending}
+              >
+                {sending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                    </svg>
+                    Sending...
+                  </span>
+                ) : (
+                  "I have paid - Notify Platform"
+                )}
+              </Button>
+              <div className="mt-2 text-sm text-gray-600">
+                After confirmation, your payment will be reviewed and you’ll be contacted for recovery instructions.
+              </div>
             </div>
           </div>
         )}
