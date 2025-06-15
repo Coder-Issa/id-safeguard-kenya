@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +30,15 @@ const Header = () => {
             <Button variant="ghost" onClick={() => navigate('/post-id')}>
               Post Lost ID
             </Button>
+            {isAdmin && (
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/admin')}
+                className="text-kenya-green font-semibold"
+              >
+                Admin
+              </Button>
+            )}
             {user && (
               <span className="px-2 text-gray-500 text-sm">Hello, {profile ? profile.full_name.split(" ")[0] : "User"}{isAdmin && " (Admin)"}</span>
             )}
