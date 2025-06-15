@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import Header from '@/components/Header';
+import HeroSection from '@/components/HeroSection';
+import SearchCard from '@/components/SearchCard';
+import StatsSection from '@/components/StatsSection';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <HeroSection />
+      
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-kenya-black mb-4">
+              Quick Search
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Start your search right here - it only takes a minute
+            </p>
+          </div>
+          <SearchCard />
+        </div>
+      </section>
+
+      <StatsSection />
+      <Footer />
     </div>
   );
 };
