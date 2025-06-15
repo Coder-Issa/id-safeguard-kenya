@@ -16,9 +16,9 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "48x48",
-      "type": "image/x-icon"
+      "src": "/lovable-uploads/fea20d0e-5511-4e9c-a1a4-c929f81c8104.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ]
 }
