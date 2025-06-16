@@ -1,20 +1,42 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { MenuToggle } from '@/components/navigation/MenuToggle';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, isAdmin, signOut, loading } = useAuth();
+  const [session, setSession] = useState<any>(null);
 
-  // Handler for Admin button
+  // Fake session assignment if user exists
+  useEffect(() => {
+    if (user) {
+      setSession({ user: { email: user.email } });
+    } else {
+      setSession(null);
+    }
+  }, [user]);
+
+  const handleTabChange = (tab: string) => {
+    const paths: Record<string, string> = {
+      search: '/search',
+      post: '/post-id',
+      browse: '/browse',
+      profile: '/profile',
+      login: '/login',
+      register: '/register',
+    };
+
+    const path = paths[tab];
+    if (path) navigate(path);
+  };
+
   const handleAdminClick = () => {
     if (loading) {
-      // Still loading; prevent click
       toast({
         title: "Please wait",
         description: "Checking admin permissions...",
@@ -32,14 +54,38 @@ const Header = () => {
     }
   };
 
+  {
+    user && (
+      <>
+        <Button variant="ghost" onClick={() => navigate('/profile')}>
+          My Profile
+        </Button>
+
+        <Button variant="ghost" onClick={() => navigate('/browse')}>
+          Browse All
+        </Button>
+
+
+        <Button
+          variant="outline"
+          onClick={signOut}
+          className="ml-2"
+        >
+          Logout
+        </Button>
+      </>
+    )
+  }
+  
+
   return (
     <header className="bg-white shadow-md border-b-2 border-kenya-red">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <img 
-              src="/lovable-uploads/fea20d0e-5511-4e9c-a1a4-c929f81c8104.png" 
-              alt="ID Safeguard Kenya Logo" 
+            <img
+              src="/lovable-uploads/fea20d0e-5511-4e9c-a1a4-c929f81c8104.png"
+              alt="ID Safeguard Kenya Logo"
               className="w-10 h-10 rounded-full"
             />
             <div>
@@ -47,24 +93,17 @@ const Header = () => {
               <p className="text-sm text-gray-600">Recover Your Lost ID Cards</p>
             </div>
           </div>
-          <nav className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" onClick={() => navigate('/')}>
-              Home
-            </Button>
-            <Button variant="ghost" onClick={() => navigate('/search')}>
-              Search
-            </Button>
-            <Button variant="ghost" onClick={() => navigate('/post-id')}>
-              Post Lost ID
-            </Button>
 
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-4">
+            <Button variant="ghost" onClick={() => navigate('/')}>Home</Button>
+            <Button variant="ghost" onClick={() => navigate('/search')}>Search</Button>
+            <Button variant="ghost" onClick={() => navigate('/post-id')}>Post Lost ID</Button>
             <Button
               variant="ghost"
               onClick={handleAdminClick}
               className={`font-semibold ${isAdmin ? "text-kenya-green" : "text-gray-400"} flex items-center`}
               disabled={loading}
-              aria-disabled={!isAdmin || loading}
-              tabIndex={0}
             >
               {loading ? (
                 <>
@@ -83,31 +122,22 @@ const Header = () => {
             )}
             {!user && !loading && (
               <>
-                <Button variant="outline" onClick={() => navigate('/login')}>
-                  Login
-                </Button>
-                <Button
-                  className="bg-kenya-green hover:bg-kenya-green/90 text-white"
-                  onClick={() => navigate('/register')}
-                >
+                <Button variant="outline" onClick={() => navigate('/login')}>Login</Button>
+                <Button className="bg-kenya-green hover:bg-kenya-green/90 text-white" onClick={() => navigate('/register')}>
                   Register
                 </Button>
               </>
             )}
             {user && (
-              <Button
-                variant="outline"
-                onClick={signOut}
-                className="ml-2"
-              >
+              <Button variant="outline" onClick={signOut} className="ml-2">
                 Logout
               </Button>
             )}
           </nav>
+
+          {/* Mobile Navigation Toggle */}
           <div className="md:hidden">
-            <Button variant="outline" size="sm">
-              Menu
-            </Button>
+            <MenuToggle session={session} onTabChange={handleTabChange} />
           </div>
         </div>
       </div>
@@ -116,3 +146,4 @@ const Header = () => {
 };
 
 export default Header;
+

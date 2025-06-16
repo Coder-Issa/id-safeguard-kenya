@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 type FoundCard = {
   id: string;
@@ -35,6 +36,9 @@ const MyProfileSection = ({ refreshFlag }: { refreshFlag: boolean }) => {
     enabled: !!user,
   });
 
+  const navigate = useNavigate();
+
+
   React.useEffect(() => {
     // refetch when refreshFlag changes
     if (user) refetch();
@@ -42,11 +46,20 @@ const MyProfileSection = ({ refreshFlag }: { refreshFlag: boolean }) => {
 
   if (!user || !profile) return null;
 
+
   return (
     <Card className="max-w-2xl mx-auto shadow-xl border-2 border-kenya-green/20 mb-16">
       <CardHeader>
         <CardTitle className="text-xl text-kenya-black">My Profile</CardTitle>
         <p className="text-gray-500">See your info and all the ID cards you've posted.</p>
+        <div className="mt-4">
+          <button
+            onClick={() => navigate("/")}
+            className="px-4 py-2 bg-kenya-green text-white rounded hover:bg-kenya-green/90"
+          >
+            Back to Home
+          </button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="mb-8">
