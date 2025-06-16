@@ -16,8 +16,8 @@
   "display": "browser",
   "icons": [
     {
-      "src": "/lovable-uploads/f0606246926cec5a439815d7.png",
-      "sizes": "512x512",
+      "src": "image.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     },
     {
