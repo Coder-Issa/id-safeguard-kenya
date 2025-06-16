@@ -15,11 +15,12 @@
   "start_url": "/",
   "display": "browser",
   "icons": [
-    {
-      "src": "image.png",
-      "sizes": "1024x1024",
-      "type": "image/png"
+     {
+    "src": "https://i.postimg.cc/HLpXCP5d/file-00000000f0606246926cec5a439815d7-2.png",
+    "sizes": "512x512",
+    "type": "image/png"
     },
+
     {
       "src": "/lovable-uploads/fea20d0e-5511-4e9c-a1a4-c929f81c8104.png",
       "sizes": "192x192",
