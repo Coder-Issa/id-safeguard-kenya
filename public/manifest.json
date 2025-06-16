@@ -13,12 +13,29 @@
     "social"
   ],
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "icons": [
+    {
+      "src": "/lovable-uploads/f0606246926cec5a439815d7.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
     {
       "src": "/lovable-uploads/fea20d0e-5511-4e9c-a1a4-c929f81c8104.png",
       "sizes": "192x192",
       "type": "image/png"
     }
-  ]
+  ],
+  "dir": "auto",
+  "scope": "https://kenyaidrecovery.co.ke/",
+  "lang": "en",
+  "orientation": "natural",
+  "display_override": [
+    "browser",
+    "fullscreen",
+    "standalone",
+    "minimal-ui",
+    "window-controls-overlay"
+  ],
+  "prefer_related_applications": false
 }
