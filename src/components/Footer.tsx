@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Footer = () => {
@@ -34,7 +33,7 @@ const Footer = () => {
               <li><a href="#" className="hover:text-kenya-green">Help Center</a></li>
               <li><a href="#" className="hover:text-kenya-green">Contact Us</a></li>
               <li><a href="/privacy-policy" className="hover:text-kenya-green">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-kenya-green">Terms of Service</a></li>
+              <li><a href="/terms-of-service" className="hover:text-kenya-green">Terms of Service</a></li>
             </ul>
           </div>
 
