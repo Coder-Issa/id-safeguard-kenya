@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +13,7 @@ import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
 import MyProfileSection from "@/components/MyProfileSection";
 import BrowseAllPage from "./pages/BrowseAllPage";
-
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="/browse" element={<BrowseAllPage />} />
           <Route path="/profile" element={<MyProfileSection refreshFlag={false} />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
