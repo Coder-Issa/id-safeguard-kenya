@@ -40,7 +40,7 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-4">Contacts</h4>
             <div className="space-y-2 text-gray-300">
               <p>Recovery Kenya ID</p>
-              <a href="mailto: thikabiketrail@gmail.com" ><i className='bx bxs-envelope'></i>recoverykenyaid@gmail.com</a>
+              <a href="mailto: recoverykenyaid@gmail.com" ><i className='bx bxs-envelope'></i>recoverykenyaid@gmail.com</a>
               <p>Nairobi/Mombasa, Kenya</p>
             </div>
           </div>
