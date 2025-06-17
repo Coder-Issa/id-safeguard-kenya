@@ -154,7 +154,7 @@ const SearchCard = () => {
         <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-sm text-yellow-800">
             <strong>Search Fee:</strong> KSH 500 will be charged for each search. 
-            KSH 300 goes to the person who found your ID, KSH 200 for platform maintenance.
+            KSH 200 goes to the person who found your ID, KSH 300 for platform maintenance.
           </p>
         </div>
         {result && (

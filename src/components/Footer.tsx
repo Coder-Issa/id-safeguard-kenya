@@ -31,25 +31,31 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-kenya-green">Help Center</a></li>
-              <li><a href="#" className="hover:text-kenya-green">Contact Us</a></li>
-              <li><a href="#" className="hover:text-kenya-green">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-kenya-green">Terms of Service</a></li>
+              <li><a href="/privacy-policy" className="hover:text-kenya-green">Privacy Policy</a></li>
+              <li><a href="/terms-of-service" className="hover:text-kenya-green">Terms of Service</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contact</h4>
+            <h4 className="text-lg font-semibold mb-4">Contacts</h4>
             <div className="space-y-2 text-gray-300">
-              <p>Admin: 0759515450</p>
-              <p>Email: recoverykenyaid@gmail.com</p>
-              <p>Nairobi, Kenya</p>
+              <p>Recovery Kenya ID</p>
+              <a href="mailto: thikabiketrail@gmail.com" ><i className='bx bxs-envelope'></i>recoverykenyaid@gmail.com</a>
+              <p>Nairobi/Mombasa, Kenya</p>
             </div>
           </div>
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
           <p>&copy; 2024 ID Safeguard Kenya. All rights reserved.</p>
+        </div>
+
+        <div className="border-t border-gray-700 mt-8 pt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <a target="_blank" rel="noreferrer" href="https://my-portfolio-omega-nine-17.vercel.app/">
+              Built by Issa Changawa ( 0759515450/0768194348 ).
+            </a>
+          </div>
         </div>
       </div>
     </footer>
