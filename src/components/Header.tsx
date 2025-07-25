@@ -54,30 +54,6 @@ const Header = () => {
     }
   };
 
-  {
-    user && (
-      <>
-        <Button variant="ghost" onClick={() => navigate('/profile')}>
-          My Profile
-        </Button>
-
-        <Button variant="ghost" onClick={() => navigate('/browse')}>
-          Browse All
-        </Button>
-
-
-        <Button
-          variant="outline"
-          onClick={signOut}
-          className="ml-2"
-        >
-          Logout
-        </Button>
-      </>
-    )
-  }
-  
-
   return (
     <header className="bg-white shadow-md border-b-2 border-kenya-red">
       <div className="container mx-auto px-4 py-4">
