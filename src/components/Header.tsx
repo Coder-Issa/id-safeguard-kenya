@@ -83,6 +83,7 @@ const Header = () => {
             <Button variant="ghost" onClick={() => navigate('/post-id')}>Post Lost ID</Button>
             <Button
               variant="ghost"
+              type="button"
               onClick={handleAdminClick}
               className={`font-semibold ${isAdmin ? "text-kenya-green" : "text-gray-400"} flex items-center`}
               disabled={loading}
