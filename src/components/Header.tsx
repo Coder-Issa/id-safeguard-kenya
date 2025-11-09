@@ -38,7 +38,6 @@ const Header = () => {
   const handleAdminClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Admin button clicked", { loading, isAdmin, user: !!user });
     
     if (loading) {
       toast({
@@ -48,10 +47,8 @@ const Header = () => {
       return;
     }
     if (isAdmin) {
-      console.log("Navigating to admin page");
       navigate('/admin');
     } else {
-      console.log("Access denied - not admin");
       toast({
         title: "Access denied",
         description: "You do not have permission to access the admin page.",

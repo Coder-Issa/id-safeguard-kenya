@@ -64,13 +64,6 @@ const SearchCard = () => {
     setSending(true);
     
     try {
-      console.log("=== PAYMENT CONFIRMATION DEBUG INFO ===");
-      console.log("User authenticated:", !!user);
-      console.log("Session exists:", !!session);
-      console.log("Profile data:", profile);
-      console.log("Result data:", result);
-      console.log("Attempting to invoke edge function...");
-      
       const requestBody = {
         id_number: result.id_number,
         full_name: result.full_name,
@@ -84,31 +77,17 @@ const SearchCard = () => {
         searcher_name: profile?.full_name || null,
       };
       
-      console.log("Request body:", requestBody);
-      
       const { data, error } = await supabase.functions.invoke('send-search-confirmation', {
         body: requestBody,
       });
 
-      console.log("Edge function response - data:", data);
-      console.log("Edge function response - error:", error);
-      console.log("=== END DEBUG INFO ===");
-
       if (error) {
-        console.error("Edge function error details:", {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
-        
         toast({
           title: "Error",
           description: `Failed to send confirmation: ${error.message}. Please try again or contact support.`,
           variant: "destructive",
         });
       } else {
-        console.log("Confirmation email sent successfully");
         toast({
           title: "Confirmation Sent",
           description: "Thank you! Your payment confirmation has been sent.",
@@ -116,13 +95,6 @@ const SearchCard = () => {
         setTimeout(() => window.location.reload(), 1500);
       }
     } catch (err) {
-      console.error("Unexpected error in handleConfirmPayment:", err);
-      console.error("Error details:", {
-        name: err instanceof Error ? err.name : 'Unknown',
-        message: err instanceof Error ? err.message : String(err),
-        stack: err instanceof Error ? err.stack : 'No stack trace'
-      });
-      
       toast({
         title: "Error",
         description: "Failed to send confirmation. Please try again.",

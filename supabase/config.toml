@@ -1,9 +1,5 @@
-
 project_id = "ejmlrcvhvdyyslgcwlab"
 
 [functions]
   verify_jwt = true
-
-[functions.send-search-confirmation]
-  verify_jwt = false
 

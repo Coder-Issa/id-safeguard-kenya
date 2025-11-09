@@ -33,39 +33,22 @@ export function useAuth(): AuthContextState {
       .eq("id", userId)
       .maybeSingle();
     setProfile(data ?? null);
-    if (error) {
-      console.error("[useAuth] fetchProfile error:", error.message);
-    } else {
-      console.log("[useAuth] Fetched profile:", data);
-    }
   };
 
   // Check if user is admin
   const fetchRole = async (userId: string) => {
-    // Add extra logging for debugging
     const { data, error } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
       .maybeSingle();
 
-    // Begin logging
-    console.info("[useAuth] fetchRole - start", { userId });
     if (error) {
-      console.error("[useAuth] fetchRole error:", error.message);
       setIsAdmin(false);
-      console.log("[useAuth] Setting isAdmin = false due to fetch error");
     } else if (!data) {
       setIsAdmin(false);
-      console.log("[useAuth] fetchRole - No data returned, setting isAdmin = false");
     } else {
-      const adminStatus = data.role === "admin";
-      setIsAdmin(adminStatus);
-      console.log(
-        "[useAuth] Fetched user role:",
-        data,
-        `Setting isAdmin to ${adminStatus} for user_id=${userId}`
-      );
+      setIsAdmin(data.role === "admin");
     }
   };
 
