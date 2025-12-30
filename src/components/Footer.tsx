@@ -52,7 +52,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-8 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <a target="_blank" rel="noreferrer" href="https://my-portfolio-omega-nine-17.vercel.app/">
+            <a target="_blank" rel="noreferrer" href="https://issa-s-tech-hub.vercel.app/">
               Built by Issa Changawa ( 0759515450/0768194348 ).
             </a>
           </div>
