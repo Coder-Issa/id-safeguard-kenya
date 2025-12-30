@@ -1,8 +1,8 @@
 
--- Allow all authenticated users to SELECT (view/search) all found IDs
+-- Allow all authenticated users to SELECT (view/search) all/own found IDs
 DROP POLICY IF EXISTS "User can view own cards" ON public.found_id_cards;
 
-CREATE POLICY "Authenticated users can view all cards"
+CREATE POLICY "Authenticated users can view own cards"
 ON public.found_id_cards
 FOR SELECT
 TO authenticated
